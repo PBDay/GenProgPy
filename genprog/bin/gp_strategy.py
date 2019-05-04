@@ -17,7 +17,7 @@ class GenProgStrategy:
 
         self._n_generations = n_generations
 
-    def evolve(self, generator, mutator, crosser, decider):
+    def evolve(self, generator, mutator, crosser, decider, print_msg=None):
         """
         Uses genetic programming to evolve an improved version of a gene
         :param generator: Generator that provides random genes for use in an original sample
@@ -49,9 +49,13 @@ class GenProgStrategy:
 
             sample = new_mutated + new_co + new_elite + new_selected
 
+            if print_msg:
+                gen_num = self._n_generations - n + 1
+                print_msg(gen_num, sample)
+
             n = n-1
 
-        return sample
+        return self._select_gene(sample, decider)
 
     def _select_gene(self,sample,decider):
         return decider.best_n(random.sample(sample, self._tourn_size), 1)
